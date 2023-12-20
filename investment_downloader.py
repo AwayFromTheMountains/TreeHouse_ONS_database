@@ -44,8 +44,8 @@ blue_book = xl.parse(sheet_name='1.1', index_col=0, usecols=[0,18,], skiprows=3,
 ################################################
 # Get the LA capital expenditure data
 ################################################
-url_22_23_forecast = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1086517/CER_2022-23_A1_capital_expenditure_and_receipts_by_service_and_category.ods'
- url_18_19 = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/842038/COR_2018-19_outputs_COR_A1.xlsx'
+#url_22_23_forecast = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1086517/CER_2022-23_A1_capital_expenditure_and_receipts_by_service_and_category.ods'
+url_18_19 = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/842038/COR_2018-19_outputs_COR_A1.xlsx'
 url_19_20 = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1037878/COR_2019-20_outputs_COR_A1.ods'
 url_20_21 = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1037853/COR_2020-21_outputs_COR_A1.ods'
 url_21_22 = 'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1116478/COR_2021-22_outputs_COR_A1.ods'
@@ -266,7 +266,7 @@ url = 'https://www.ons.gov.uk/file?uri=/economy/regionalaccounts/grossdisposable
 data_name = 'Regional GFCF by asset type'
 req = requests.get(url)
 filename = url.split('/')[-1]
-filepath = os.path.join('input_data', filename)
+filepath = os.path.join(data_folder, filename)
 if os.path.isfile(filepath) == False:
     print('Downloading {} data'.format(data_name))
     with open(filepath, 'wb') as output_file:
