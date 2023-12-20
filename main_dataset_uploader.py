@@ -1366,7 +1366,7 @@ LA_investment_per_head['value_per_head'] = 1000 * LA_investment_per_head['value'
 
 #  rearrange and rename columns
 LA_investment_per_head = LA_investment_per_head.loc[:,['lad21cd', 'lad21nm', 'Sector', 'Sub-sector', 'Asset', 'Year', 'value',
-       'population', 'value_per_head']]
+       'population', 'value_per_head']].rename({'Sub-sector':'sub_sector'}, axis=1)
 LA_investment_per_head.columns = [x.lower() for x in  LA_investment_per_head.columns]
 
 # create a database table
@@ -1377,31 +1377,30 @@ with psycopg2.connect(**params) as con:
                 lad21cd VARCHAR,
                 lad21nm VARCHAR,
                 sector VARCHAR,
-                sub-sector VARCHAR,
+                sub_sector VARCHAR,
                 asset VARCHAR,
                 year INT,
-                variable_name VARCHAR,
-                measures_name VARCHAR,
-                obs_value FLOAT,
-                obs_status_name VARCHAR,
+                value FLOAT,
+                population FLOAT,
+                value_per_head FLOAT,
                 created timestamptz,
                 parent_script VARCHAR,
-                PRIMARY KEY (geog_code, year, variable_name, measures_name));
+                PRIMARY KEY (lad21cd, sector, sub_sector, asset, year));
                 """)
     cur.close()
     con.commit()
 
 # prepare for upload
 # add timestamps and parent scripts...
-for df in [skills]:
+for df in [LA_investment_per_head]:
     df['created'] = datetime.datetime.now()
     df['parent_script'] = parent_script
 #...convert NAs for storing in postresql [should I wrap this into the insert function?]
-skills = skills.fillna(psycopg2.extensions.AsIs('NULL'))
+LA_investment_per_head = LA_investment_per_head.fillna(psycopg2.extensions.AsIs('NULL'))
 
 # load the data
 with psycopg2.connect(**params) as con:
-    execute_values(df=skills, table='skills_lad', con=con)
+    execute_values(df=LA_investment_per_head, table='la_investment', con=con)
 
 
 ###################################################################################
